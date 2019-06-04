@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bonsai/0.4/bonsai.min.js"></script>
+
+<body>
+    <div id = "canvas">
+        <script>
+            var m = bonsai.run(document.getElementById('canvas'),{
+                
+                url: 'beziercurve.js',
+                width: $(window).width(),
+                height: $(window).height(),
+                code: function(){
+                    var square = new Rect(20,20, 100, 100);
+                    square.addTo(stage);
+                    square.fill('red');
+                }
+            });
+           
+        </script>
+    </div>
+</body>
