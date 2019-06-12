@@ -12,7 +12,8 @@
 }
 </style>
 <header>
-    Curvas brabas.
+    <label>Número de Avaliações</label>
+    <input type="number" id="aval" onchange="mudarT(document.getElementById('aval').value)">
     <button class = "btn_c" onclick="adicionarcurva()">Adicionar curva</button>
 </header>
 
@@ -20,12 +21,14 @@
     <div id = "canvas">
         <script>
             var m = bonsai.run(document.getElementById('canvas'),{
-                
                 url: 'beziercurve.js',
                 width: $(window).width(),
                 height: $(window).height()
 
             });
+            function mudarT(newt){
+                m.sendMessage("mudarT", newt); 
+            }
 
             function adicionarcurva(){
                 m.sendMessage("adicionarCurva",{});

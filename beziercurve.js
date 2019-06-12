@@ -2,7 +2,6 @@ points = [];
 ctrlpoly = [];
 curve = [];
 a_curves =[];
-t = 300;
 select_ctrl = 0;
 point_color = 'red';
 point_size = 6;
@@ -28,6 +27,7 @@ function bernstein(p1, p2, t){
 	return point;
 }
 function makeCurve(){
+
     let c_points = [];
     for(let i = 0; i < t; i++){
         let aux = [];
@@ -88,6 +88,11 @@ stage.on('message:adicionarCurva', function(){
     if(a_curves[a_curves.length -1])
     select_ctrl = a_curves.length;
 });
+
+stage.on('message:mudarT', function(newT){
+    t = newT;
+}
+);
 //ação de edição e chamada dos pontos.
 function pointaction(){
      if(points.length > 1)
@@ -99,7 +104,7 @@ function pointaction(){
 stage.on('click', function(point){
     p = new Circle(point.x, point.y, point_size).fill(point_color);
     points.push(p);
-    
+ 
    // p.addTo(stage);
    pointaction();
    show();
