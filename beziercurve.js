@@ -5,12 +5,16 @@ a_curves =[];
 select_ctrl = 0;
 point_color = 'red';
 point_size = 6;
+poligono = false;
+ponto = false;
+curva = false;
 function show(){
 
     var stageObjects = [];
     var c_curve = [];
     curve.forEach(c => c_curve.push(c));
     ctrlpoly.forEach(l => c_curve.push(l));
+    if(ponto)
     points.forEach(c => c_curve.push(c));
     
     if(!a_curves[select_ctrl] && c_curve)
@@ -89,24 +93,40 @@ stage.on('message:adicionarCurva', function(){
     select_ctrl = a_curves.length;
 });
 
+stage.on('message:mostrarPoligono', function(pol){
+    poligono = pol;
+}
+);
+
+stage.on('message:mostrarPonto', function(pon){
+    ponto = pon;
+}
+);
+
+stage.on('message:mostrarCurva', function(cur){
+    curva = cur;
+}
+);
+
+
+
 stage.on('message:mudarT', function(newT){
     t = newT;
 }
 );
 //ação de edição e chamada dos pontos.
-function pointaction(){
-     if(points.length > 1)
+function pointaction(poligono, curva){
+     if(points.length > 1 && poligono)
      ctrlpoly = tracepoly();  
-     if(points.length > 2)
+     if(points.length > 2 && curva)
      makeCurve(); 
 }
 //Click de criação de novos pontos
 stage.on('click', function(point){
     p = new Circle(point.x, point.y, point_size).fill(point_color);
     points.push(p);
- 
-   // p.addTo(stage);
-   pointaction();
-   show();
+   // p.addTo(stage); 
+  pointaction(poligono, curva);
+  show();
     
 })

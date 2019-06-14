@@ -14,18 +14,36 @@
 <header>
     <label>Número de Avaliações</label>
     <input type="number" id="aval" onchange="mudarT(document.getElementById('aval').value)">
+    <input type="checkbox" id="poligonos"  onclick="mostrarPoligono(document.getElementById('poligonos').checked)"> Polígonos de controle
+    <input type="checkbox" id="pontos"  onclick="mostrarPonto(document.getElementById('pontos').checked)"> Pontos de controle
+    <input type="checkbox" id="curvas"   onclick="mostrarCurva(document.getElementById('curvas').checked)"> Curvas
     <button class = "btn_c" onclick="adicionarcurva()">Adicionar curva</button>
 </header>
 
 <body>
-    <div id = "canvas">
+    <div id = "canvas"> 
         <script>
             var m = bonsai.run(document.getElementById('canvas'),{
                 url: 'beziercurve.js',
                 width: $(window).width(),
                 height: $(window).height()
-
             });
+
+            function mostrarPoligono(valorPol){
+                pol = valorPol;
+                m.sendMessage("mostrarPoligono", pol);
+            }
+
+            function mostrarPonto(valorPonto){
+                pon = valorPonto;
+                m.sendMessage("mostrarPonto", pon);
+            }
+
+            function mostrarCurva(valorCurva){
+                cur = valorCurva;
+                m.sendMessage("mostrarCurva", cur);
+            }
+
             function mudarT(newt){
                 m.sendMessage("mudarT", newt); 
             }
