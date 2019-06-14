@@ -1,6 +1,11 @@
 points = [];
 ctrlpoly = [];
 curve = [];
+conj = {
+    "curva" : curve,
+    "pontos" : points,
+    "controle" : ctrlpoly
+}
 a_curves =[];
 select_ctrl = 0;
 point_color = 'red';
@@ -9,13 +14,12 @@ poligono = false;
 ponto = false;
 curva = false;
 function show(){
-
     var stageObjects = [];
     var c_curve = [];
-    curve.forEach(c => c_curve.push(c));
-    ctrlpoly.forEach(l => c_curve.push(l));
+    conj.curva.forEach(c => c_curve.push(c));
+    conj.controle.forEach(l => c_curve.push(l));
     if(ponto)
-    points.forEach(c => c_curve.push(c));
+    conj.pontos.forEach(c => c_curve.push(c));
     
     if(!a_curves[select_ctrl] && c_curve)
     a_curves.push(c_curve);
@@ -38,8 +42,8 @@ function makeCurve(){
         let aux2 = [];
 
         //transformando todos os circulos(pontos de controle) em pontos.
-        for (let j = 0; j < points.length; j++) {
-            aux.push(new Point(points[j].attr('x'), points[j].attr('y')));
+        for (let j = 0; j < conj.pontos.length; j++) {
+            aux.push(new Point(conj.pontos[j].attr('x'), conj.pontos[j].attr('y')));
         }
         //* /Interpolar todos os pontos até um só, usando o polinomio de bernstein */
         //* /Fazendo isso percorrendo a quantidade de avaliações para a interpolação e formação da curva.*/
@@ -47,7 +51,7 @@ function makeCurve(){
 			for(var k = 0; k<aux.length-1;k++){
 				point = bernstein(aux[k], aux[k+1], i/t);
 				aux2.push(point);
-			}
+            }
 			aux = aux2;
 			aux2 = [];
 		}
@@ -74,8 +78,8 @@ function tracecurve(c_points){
 //Função que traça o poligono de controle
 function tracepoly(){
     let aux = []
-    for (let i = 0; i < points.length -1; i++) {
-        let x1 = points[i].attr('x'), x2 = points[i + 1].attr('x') ,y1 = points[i].attr('y'), y2 = points[i + 1].attr('y')
+    for (let i = 0; i < conj.pontos.length -1; i++) {
+        let x1 = conj.pontos[i].attr('x'), x2 = conj.pontos[i + 1].attr('x') ,y1 = conj.pontos[i].attr('y'), y2 = conj.pontos[i + 1].attr('y')
         aux.push(new Path()
             .moveTo(x1, y1)
             .lineTo(x2, y2)
@@ -91,6 +95,13 @@ stage.on('message:adicionarCurva', function(){
     curve = [];
     if(a_curves[a_curves.length -1])
     select_ctrl = a_curves.length;
+
+    conj = {
+        "curva" : curve,
+        "pontos" : points,
+        "controle" : ctrlpoly
+    }
+
 });
 
 stage.on('message:mostrarPoligono', function(pol){
@@ -116,15 +127,15 @@ stage.on('message:mudarT', function(newT){
 );
 //ação de edição e chamada dos pontos.
 function pointaction(poligono, curva){
-     if(points.length > 1 && poligono)
-     ctrlpoly = tracepoly();  
-     if(points.length > 2 && curva)
+     if(conj.pontos.length > 1 && poligono)
+     conj.controle = tracepoly();  
+     if(conj.pontos.length > 2 && curva)
      makeCurve(); 
 }
 //Click de criação de novos pontos
 stage.on('click', function(point){
     p = new Circle(point.x, point.y, point_size).fill(point_color);
-    points.push(p);
+    conj.pontos.push(p);
    // p.addTo(stage); 
   pointaction(poligono, curva);
   show();
